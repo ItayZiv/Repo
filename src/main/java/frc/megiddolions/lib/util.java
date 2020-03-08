@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
@@ -15,10 +14,11 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.megiddolions.lib.control.FeedForward;
+import frc.megiddolions.lib.control.PID;
 import frc.megiddolions.lib.control.drivetrain.RamseteGen_DT;
 import frc.megiddolions.lib.lambdas.Suppliers;
 import frc.megiddolions.lib.hardware.power.CurrentSensor;
-import frc.megiddolions.lib.control.trajectories.DriveTrainConstants;
 
 import java.nio.file.Paths;
 import java.util.List;
@@ -45,32 +45,33 @@ public class util {
     }
 
     public static RamseteCommand generateRamseteCommand(String trajectoryName, RamseteGen_DT drivetrain) {
-        return generateRamseteCommand(trajectoryName, drivetrain::getPose, drivetrain.getConstants(),
-                drivetrain.getKinematics(), drivetrain::getWheelSpeeds, drivetrain::tankDriveVolts, drivetrain);
+        return generateRamseteCommand(trajectoryName, drivetrain::getPose, drivetrain.getFeedForwardConstants(),
+                drivetrain.getVelocityPID(), drivetrain.getKinematics(), drivetrain::getWheelSpeeds, drivetrain::tankDriveVolts, drivetrain);
     }
 
     public static RamseteCommand generateRamseteCommand(String trajectoryName, Supplier<Pose2d> poseSupplier,
-                                                        DriveTrainConstants constants, DifferentialDriveKinematics kinematics,
+                                                        FeedForward feedForwardConstants, PID velocityPID,
+                                                        DifferentialDriveKinematics kinematics,
                                                         Supplier<DifferentialDriveWheelSpeeds> wheelSpeedsSupplier,
                                                         BiConsumer<Double, Double> tankDriveVolts, Subsystem drivetrain) {
-        return generateRamseteCommand(getTrajectory(trajectoryName), poseSupplier, constants, kinematics, wheelSpeedsSupplier, tankDriveVolts, drivetrain);
+        return generateRamseteCommand(getTrajectory(trajectoryName), poseSupplier, feedForwardConstants, velocityPID,
+                kinematics, wheelSpeedsSupplier, tankDriveVolts, drivetrain);
     }
 
     public static RamseteCommand generateRamseteCommand(Trajectory trajectory, Supplier<Pose2d> poseSupplier,
-                                                        DriveTrainConstants constants, DifferentialDriveKinematics kinematics,
+                                                        FeedForward feedForwardConstants, PID velocityPID,
+                                                        DifferentialDriveKinematics kinematics,
                                                         Supplier<DifferentialDriveWheelSpeeds> wheelSpeedsSupplier,
                                                         BiConsumer<Double, Double> tankDriveVolts, Subsystem drivetrain) {
         return new RamseteCommand(
                 trajectory,
                 poseSupplier,
                 new RamseteController(),
-                new SimpleMotorFeedforward(constants.ksVolts,
-                        constants.kvVoltsSecondsPerMeter,
-                        constants.kaVoltsSecondsSquaredPerMeter),
+                feedForwardConstants.toSimpleMotorFeedForward(),
                 kinematics,
                 wheelSpeedsSupplier,
-                new PIDController(constants.kPDriveVel, 0, 0),
-                new PIDController(constants.kPDriveVel, 0, 0),
+                velocityPID.makeController(),
+                velocityPID.makeController(),
                 tankDriveVolts,
                 drivetrain
         );

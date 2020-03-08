@@ -3,21 +3,21 @@ package frc.megiddolions.lib.control;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 
 public class FeedForward {
-    public double S;
-    public double V;
-    public double A;
+    public double sVolts;
+    public double vVoltsSecondsPerMeter;
+    public double aVoltsSecondsSquaredPerMeter;
 
-    public FeedForward(double S, double V) {
-        this(S, V, 0);
+    public FeedForward(double sVolts, double vVoltsSecondsPerMeter) {
+        this(sVolts, vVoltsSecondsPerMeter, 0);
     }
 
-    public FeedForward(double S, double V, double A) {
-        this.S = S;
-        this.V = V;
-        this.A = A;
+    public FeedForward(double sVolts, double vVoltsSecondsPerMeter, double aVoltsSecondsSquaredPerMeter) {
+        this.sVolts = sVolts;
+        this.vVoltsSecondsPerMeter = vVoltsSecondsPerMeter;
+        this.aVoltsSecondsSquaredPerMeter = aVoltsSecondsSquaredPerMeter;
     }
 
     public SimpleMotorFeedforward toSimpleMotorFeedForward() {
-        return new SimpleMotorFeedforward(S, V, A);
+        return new SimpleMotorFeedforward(sVolts, vVoltsSecondsPerMeter, aVoltsSecondsSquaredPerMeter);
     }
 }
