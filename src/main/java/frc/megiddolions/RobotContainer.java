@@ -10,8 +10,7 @@ package frc.megiddolions;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.megiddolions.commands.ExampleCommand;
-import frc.megiddolions.subsystems.ExampleSubsystem;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -21,11 +20,6 @@ import frc.megiddolions.subsystems.ExampleSubsystem;
  */
 public class RobotContainer
 {
-    // The robot's subsystems and commands are defined here...
-    private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-
-    private final ExampleCommand autonomousCommand = new ExampleCommand(exampleSubsystem);
-
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -55,7 +49,6 @@ public class RobotContainer
      */
     public Command getAutonomousCommand()
     {
-        // An ExampleCommand will run in autonomous
-        return autonomousCommand;
+        return new InstantCommand();
     }
 }

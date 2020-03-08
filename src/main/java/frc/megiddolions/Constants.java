@@ -17,5 +17,5 @@ package frc.megiddolions;
  */
 public final class Constants 
 {
-    
+    public static double kRobotPeriod = 0.02;
 }
