@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.megiddolions.Constants.ControlPanelConstants;
 import frc.megiddolions.lib.InfiniteRecharge.ControlPanel;
+import frc.megiddolions.lib.dashboard.Dashboard;
+import frc.megiddolions.lib.dashboard.DashboardItem;
 
 public class ControlPanelSubsystem extends SubsystemBase {
     private final WPI_TalonSRX spinMotor;
@@ -46,6 +48,9 @@ public class ControlPanelSubsystem extends SubsystemBase {
         colorMatch.addColorMatch(ControlPanel.ControlPanelColor.Green.colorVal);
         colorMatch.addColorMatch(ControlPanel.ControlPanelColor.Red.colorVal);
         colorMatch.addColorMatch(ControlPanel.ControlPanelColor.Yellow.colorVal);
+
+        Dashboard.getInstance().addData(new DashboardItem<>(DriverStation.getInstance()::getGameSpecificMessage, "ColorKey", "Unknown"));
+        Dashboard.getInstance().addData(new DashboardItem<>(ControlPanel::getOffsetColorAssignment, "Color", ControlPanel.ControlPanelColor.Unknown));
     }
 
     @Override
@@ -60,7 +65,6 @@ public class ControlPanelSubsystem extends SubsystemBase {
                 count++;
             previousColor = foundColor;
         }
-        NetworkTableInstance.getDefault().getTable("Dashboard").getEntry("Color").setString(DriverStation.getInstance().getGameSpecificMessage());
     }
 
     public void setMotorExtension(boolean state) {
@@ -96,4 +100,3 @@ public class ControlPanelSubsystem extends SubsystemBase {
         spinMotor.stopMotor();
     }
 }
-

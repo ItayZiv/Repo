@@ -27,7 +27,7 @@ public class ControlPanel {
         Green(kGreenTarget),
         Red(kRedTarget),
         Yellow(kYellowTarget),
-        Unknown(null);
+        Unknown(new Color(0, 0, 0));
 
         public final Color colorVal;
 

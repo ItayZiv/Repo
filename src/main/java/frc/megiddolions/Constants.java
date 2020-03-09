@@ -162,4 +162,12 @@ public final class Constants
         public static final UnitConverter kPitchToDistance = (double angle) ->
                 0.0114 * Math.pow(angle, 2) - 0.0622 * angle + 3.3753;
     }
+
+    public static final class OIConstants {
+
+    }
+
+    public static final class DashboardConstants {
+        public static final String kDashboardTable = "Dashboard";
+    }
 }
