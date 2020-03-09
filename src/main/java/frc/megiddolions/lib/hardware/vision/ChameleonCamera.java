@@ -16,8 +16,6 @@ public class ChameleonCamera implements VisionCamera{
     private static final String kNTVisionTable = "chameleon-vision";
     private NetworkTable cameraTable;
     private ChameleonTableEntries cameraEntries;
-    private double cameraPitch = 0;
-    private double cameraLocationOffset = 0;
 
     public ChameleonCamera(String cameraName) {
         cameraTable = NetworkTableInstance.getDefault().getTable(kNTVisionTable).getSubTable(cameraName);
@@ -37,25 +35,9 @@ public class ChameleonCamera implements VisionCamera{
         return util.fromChameleonPose(chameleonPose);
     }
 
-    public void setOffsets(double cameraPitch, double cameraLocationOffset) {
-        this.cameraPitch = cameraPitch;
-        this.cameraLocationOffset = cameraLocationOffset;
-    }
-
-    public Pose2d getOffsetPose() {
-        Pose2d pose = getPose();
-        return new Pose2d(new Translation2d(pose.getTranslation().getX() * Math.cos(cameraPitch),
-                pose.getTranslation().getY() - cameraLocationOffset), pose.getRotation());
-    }
-
     public double getRawDistance() {
         Pose2d pose = getPose();
         return Math.sqrt( Math.pow(pose.getTranslation().getX(), 2) + Math.pow(pose.getTranslation().getY(), 2));
-    }
-
-    public double getDistance() {
-        Pose2d pose = getOffsetPose();
-        return pose.getTranslation().getDistance(new Translation2d());
     }
 
     @Override

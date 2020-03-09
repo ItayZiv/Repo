@@ -111,9 +111,6 @@ public final class Constants
 
         public static final int kMicroSwitch = 4;
 
-        public static final UnitConverter kPitchToDistance = (double angle) ->
-                0.0114 * Math.pow(angle, 2) - 0.0622 * angle + 3.3753;
-
         public static TalonSRXConfiguration getShooterTalonConfiguration(boolean isMaster) {
             TalonSRXConfiguration config = new TalonSRXConfiguration();
             config.continuousCurrentLimit = kShooterConstantCurrentLimit;
@@ -133,5 +130,20 @@ public final class Constants
 
             return config;
         }
+    }
+
+    public static final class VisionConstants {
+        public static final String kCameraName = "Microsoft LifeCam HD-3000";
+
+        public static final double kCameraOffset = 0.0155;
+
+        public static final double kCameraPitch = 26;
+
+        public static final double kPortDistMeters = Units.inchesToMeters(29.25);
+
+        public static final double kMaxInnerPortAngle = 25;
+
+        public static final UnitConverter kPitchToDistance = (double angle) ->
+                0.0114 * Math.pow(angle, 2) - 0.0622 * angle + 3.3753;
     }
 }
