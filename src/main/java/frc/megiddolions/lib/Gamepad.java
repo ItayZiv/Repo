@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
-public class XboxGamepad extends XboxController {
+public class Gamepad extends XboxController {
 
     public final JoystickButton A;
     public final JoystickButton B;
@@ -21,7 +21,7 @@ public class XboxGamepad extends XboxController {
     public final POVButton dpad_down;
     public final POVButton dpad_left;
 
-    public XboxGamepad(final int port) {
+    public Gamepad(final int port) {
         super(port);
 
         A = new JoystickButton(this, Button.kA.value);

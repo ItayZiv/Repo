@@ -76,7 +76,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Au
 
     @Override
     public void periodic() {
-        odometry.update(Rotation2d.fromDegrees(headingSupplier.getAsDouble()), leftEncoder.getPosition(), rightEncoder.getPosition());
+        odometry.update(getHeading(), leftEncoder.getPosition(), rightEncoder.getPosition());
     }
 
     public void tankDrive(double leftPower, double rightPower) {
@@ -102,6 +102,10 @@ public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Au
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity());
+    }
+
+    public Rotation2d getHeading() {
+        return Rotation2d.fromDegrees(headingSupplier.getAsDouble());
     }
 
     public Pose2d getPose() {
@@ -145,6 +149,10 @@ public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Au
 
         ShifterState(boolean value) {
             this.value = value;
+        }
+
+        public ShifterState swap() {
+            return getState(!this.value);
         }
 
         public static ShifterState getState(boolean value) {

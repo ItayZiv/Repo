@@ -1,5 +1,6 @@
 package frc.megiddolions.lib.control;
 
+import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import edu.wpi.first.wpilibj.controller.PIDController;
 
 public class PID {
@@ -25,5 +26,14 @@ public class PID {
 
     public PIDController makeController(double period) {
         return new PIDController(P, I, D, period);
+    }
+
+    public SlotConfiguration makeTalonSlotConfig() {
+        SlotConfiguration config = new SlotConfiguration();
+        config.kP = P;
+        config.kI = I;
+        config.kD = D;
+        config.integralZone = integralZone;
+        return config;
     }
 }

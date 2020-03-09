@@ -121,10 +121,7 @@ public final class Constants
                 config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
                 config.velocityMeasurementPeriod = VelocityMeasPeriod.Period_10Ms;
                 config.velocityMeasurementWindow = 32;
-                config.slot0.kP = ShooterConstants.kVelocityPID.P;
-                config.slot0.kI = ShooterConstants.kVelocityPID.I;
-                config.slot0.kD = ShooterConstants.kVelocityPID.D;
-                config.slot0.integralZone = ShooterConstants.kVelocityPID.integralZone;
+                config.slot0 = ShooterConstants.kVelocityPID.makeTalonSlotConfig();
                 config.slot0.allowableClosedloopError = (int)Math.round(kVelocityToleranceUnitsPer100ms);
             }
 
@@ -173,7 +170,13 @@ public final class Constants
     }
 
     public static final class OIConstants {
+        public static final int kLeftJoystick = 0;
+        public static final int kRightJoystick = 1;
+        public static final int kGamepadPort = 2;
 
+        public static final int kShifterJoystickButton = 1;
+        public static final int kAlignJoystickButton = 1;
+        public static final int kStraightDriveButton = 2;
     }
 
     public static final class DashboardConstants {
