@@ -132,6 +132,22 @@ public final class Constants
         }
     }
 
+    public static final class ControlPanelConstants {
+        public static final int kSpinTalon = 7;
+
+        public static final int kPistonPort = 3;
+
+        public static final int kSpinnerPCMPort = 1;
+
+        public static final int kSpinsPerColor = 4;
+        public static final int kColorsPerRevolution = 8;
+        public static final double kMaxSpeed = 40;
+
+        public static final double kRotationControlSpins = 4;
+
+        public static final int kColorsChangesPerRevolution = 8;
+    }
+
     public static final class VisionConstants {
         public static final String kCameraName = "Microsoft LifeCam HD-3000";
 
