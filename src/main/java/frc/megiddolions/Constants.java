@@ -70,6 +70,8 @@ public final class Constants
 
         public static final int kShooterIndexerVictor = 6;
 
+        public static final int kShooterRPM = 3076;
+
         public static final boolean kInvertFlywheelMotors = false;
         public static final boolean kInvertIndexMotor = true;
 
@@ -118,6 +120,7 @@ public final class Constants
             config.peakCurrentLimit = kShooterPeakCurrentLimit;
 
             if (isMaster) {
+                config.primaryPID.selectedFeedbackCoefficient = kUnitsPer100msToRevolutionsPerMinute.convert(1);
                 config.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
                 config.velocityMeasurementPeriod = VelocityMeasPeriod.Period_10Ms;
                 config.velocityMeasurementWindow = 32;

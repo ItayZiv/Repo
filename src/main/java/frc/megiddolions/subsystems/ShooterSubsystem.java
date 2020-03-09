@@ -41,11 +41,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void spin(int revolutionPerMinute) {
-        spinUnits(ShooterConstants.kRevolutionsPerMinuteToUnitsPer100ms.convert(revolutionPerMinute));
-    }
-
-    public void spinUnits(double unitsPer100ms) {
-        shooterMaster.set(ControlMode.Velocity, unitsPer100ms);
+        shooterMaster.set(ControlMode.Velocity, revolutionPerMinute);
     }
 
     public void spin(double power) {
@@ -64,6 +60,10 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMaster.set(ControlMode.Velocity, 0);
         shooterMaster.set(0);
         shooterMaster.stopMotor();
+    }
+
+    public void stopFeed() {
+        indexMotor.stopMotor();
     }
 }
 

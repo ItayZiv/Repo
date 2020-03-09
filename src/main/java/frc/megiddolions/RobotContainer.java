@@ -15,8 +15,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.megiddolions.Constants.*;
 import frc.megiddolions.commands.AlignTargetCommand;
+import frc.megiddolions.commands.ControlPanelControlCommand;
+import frc.megiddolions.commands.drive.ArcadeDriveCommand;
 import frc.megiddolions.commands.drive.TankDriveCommand;
 import frc.megiddolions.lib.Gamepad;
+import frc.megiddolions.lib.InfiniteRecharge.ControlPanel;
 import frc.megiddolions.subsystems.*;
 
 /**
@@ -31,6 +34,7 @@ public class RobotContainer
     private final Joystick rightJoystick = new Joystick(OIConstants.kRightJoystick);
     private final Gamepad gamepad = new Gamepad(OIConstants.kGamepadPort);
 
+    private final ClimbSubsystem climb;
     private final DriveTrainSubsystem driveTrain;
     private final ControlPanelSubsystem controlPanel;
     private final IntakeSubsystem intake;
@@ -42,6 +46,7 @@ public class RobotContainer
      */
     public RobotContainer()
     {
+        climb = new ClimbSubsystem();
         driveTrain = new DriveTrainSubsystem();
         controlPanel = new ControlPanelSubsystem();
         intake = new IntakeSubsystem();
@@ -61,11 +66,31 @@ public class RobotContainer
      */
     private void configureButtonBindings()
     {
-        new JoystickButton(leftJoystick, OIConstants.kShifterJoystickButton).whenPressed(new InstantCommand(() ->
-                driveTrain.setShifter(driveTrain.getShifter().swap()), driveTrain));
+        new JoystickButton(leftJoystick, OIConstants.kShifterJoystickButton).whenPressed(
+                () -> driveTrain.setShifter(driveTrain.getShifter().swap()), driveTrain);
         new JoystickButton(rightJoystick, OIConstants.kAlignJoystickButton).whileHeld(new AlignTargetCommand(driveTrain, vision));
-        new JoystickButton(rightJoystick, OIConstants.kStraightDriveButton).whileHeld(new TankDriveCommand(driveTrain,
-                () -> rightJoystick.getY() * -1, () -> rightJoystick.getY() * -1));
+        new JoystickButton(rightJoystick, OIConstants.kStraightDriveButton).whileHeld(new ArcadeDriveCommand(driveTrain,
+                () -> rightJoystick.getY() * -1, () -> 0));
+
+        //Spin and stop shooter
+        gamepad.A.whenPressed(() -> shooter.spin(ShooterConstants.kShooterRPM), shooter);
+        gamepad.B.whenPressed(shooter::stop, shooter);
+
+        //Feed shooter and backup
+        gamepad.X.whileHeld(() -> shooter.feedShooter(-0.5), shooter).whenReleased(shooter::stopFeed, shooter);
+        new JoystickButton(leftJoystick, 10).whenPressed(() -> shooter.feedShooter(0.8)).whenReleased(() -> shooter.feedShooter(0));
+
+        //Intake in each direction
+        gamepad.leftBumper.whileHeld(() -> intake.intake(-1), intake).whenReleased(intake::stop, intake);
+        gamepad.rightBumper.whileHeld(() -> intake.intake(1), intake).whenReleased(intake::stop, intake);
+
+        //Climb in each direction
+        gamepad.dpad_up.whileHeld(() -> climb.climb(0.8)).whenReleased(climb::stop, climb);
+        gamepad.dpad_down.whileHeld(() -> climb.climb(-0.8)).whenReleased(climb::stop, climb);
+
+        gamepad.leftStick.whenPressed(
+                () -> controlPanel.setMotorExtension(!controlPanel.getMotorExtension()), controlPanel).whileHeld(
+                        new ControlPanelControlCommand(controlPanel, gamepad::getCombinedTriggers));
     }
 
 

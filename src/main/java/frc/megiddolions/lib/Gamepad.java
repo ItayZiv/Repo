@@ -39,4 +39,14 @@ public class Gamepad extends XboxController {
         dpad_down = new POVButton(this, 180);
         dpad_left = new POVButton(this, 270);
     }
+
+    public double getCombinedTriggers() {
+        double leftTrigger = getTriggerAxis(Hand.kLeft);
+        double rightTrigger = getTriggerAxis(Hand.kRight);
+
+        if (leftTrigger >= rightTrigger)
+            return leftTrigger;
+        else
+            return -rightTrigger;
+    }
 }
