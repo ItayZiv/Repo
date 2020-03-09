@@ -132,6 +132,15 @@ public final class Constants
         }
     }
 
+    public static final class IntakeConstants {
+        public static final int kIntakeVictor = 8;
+    }
+
+    public static final class ClimbConstants {
+        public static final int kClimbTalon = 11;
+        public static final int kClimbBalanceTalon = 12;
+    }
+
     public static final class ControlPanelConstants {
         public static final int kSpinTalon = 7;
 
