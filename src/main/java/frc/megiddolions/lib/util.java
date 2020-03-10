@@ -20,6 +20,7 @@ import frc.megiddolions.lib.control.drivetrain.RamseteGen_DT;
 import frc.megiddolions.lib.lambdas.Suppliers;
 import frc.megiddolions.lib.hardware.power.CurrentSensor;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -35,16 +36,11 @@ public class util {
         return new Pose2d(chameleonPose[kChameleonPoseX], chameleonPose[kChameleonPoseY], Rotation2d.fromDegrees(chameleonPose[kChameleonPoseRotation]));
     }
 
-    public static Trajectory getTrajectory(String pathName) {
-        try {
-            return TrajectoryUtil.fromPathweaverJson(Paths.get(Filesystem.getDeployDirectory() + "/" + pathName + ".wpilib.json"));
-        }
-        catch (Exception e) {
-            return kEmptyTrajectory;
-        }
+    public static Trajectory getTrajectory(String pathName) throws IOException {
+        return TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve("output/" + pathName + ".wpilib.json"));
     }
 
-    public static RamseteCommand generateRamseteCommand(String trajectoryName, RamseteGen_DT drivetrain) {
+    public static RamseteCommand generateRamseteCommand(String trajectoryName, RamseteGen_DT drivetrain) throws IOException {
         return generateRamseteCommand(trajectoryName, drivetrain::getPose, drivetrain.getFeedForwardConstants(),
                 drivetrain.getVelocityPID(), drivetrain.getKinematics(), drivetrain::getWheelSpeeds, drivetrain::tankDriveVolts, drivetrain);
     }
@@ -53,7 +49,7 @@ public class util {
                                                         FeedForward feedForwardConstants, PID velocityPID,
                                                         DifferentialDriveKinematics kinematics,
                                                         Supplier<DifferentialDriveWheelSpeeds> wheelSpeedsSupplier,
-                                                        BiConsumer<Double, Double> tankDriveVolts, Subsystem drivetrain) {
+                                                        BiConsumer<Double, Double> tankDriveVolts, Subsystem drivetrain) throws IOException{
         return generateRamseteCommand(getTrajectory(trajectoryName), poseSupplier, feedForwardConstants, velocityPID,
                 kinematics, wheelSpeedsSupplier, tankDriveVolts, drivetrain);
     }

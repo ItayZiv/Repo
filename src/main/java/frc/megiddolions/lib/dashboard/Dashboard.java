@@ -2,10 +2,16 @@ package frc.megiddolions.lib.dashboard;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.megiddolions.Constants.DashboardConstants;
 import frc.megiddolions.lib.InfiniteRecharge.ControlPanel;
+import frc.megiddolions.lib.dashboard.test.DashboardUpdatable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class Dashboard {
 
@@ -19,28 +25,42 @@ public class Dashboard {
 
     public final NetworkTableInstance ntInstance;
     private final NetworkTable dashboardTable;
-    private List<DashboardItem> dataList;
+    private HashMap<String, Supplier> data = new HashMap<>();
 
     private Dashboard() {
         ntInstance = NetworkTableInstance.getDefault();
         dashboardTable = ntInstance.getTable(DashboardConstants.kDashboardTable);
+        Shuffleboard.getTab(DashboardConstants.kDashboardTable);
     }
 
     public void update() {
-        for (DashboardItem dashboardItem : dataList) {
-            dashboardTable.getEntry(dashboardItem.getName()).setValue(dashboardItem.getData());
-        }
+        data.forEach((name, supplier) -> dashboardTable.getEntry(name).setValue(supplier.get()));
     }
 
-    public void addData(DashboardItem data) {
-        if (data.defaultValue instanceof ControlPanel.ControlPanelColor) {
-            ControlPanel.ControlPanelColor defaultColor = (ControlPanel.ControlPanelColor)data.defaultValue;
-            dataList.add(new DashboardItem<>(() -> {
-                ControlPanel.ControlPanelColor color = (ControlPanel.ControlPanelColor) data.getData();
+    public void addData(String name, Supplier supplier) {
+        if (supplier.get().getClass() == ControlPanel.ControlPanelColor.class) {
+            data.put(name, () -> {
+                var color = (ControlPanel.ControlPanelColor)supplier.get();
                 return new double[] {color.colorVal.red, color.colorVal.green, color.colorVal.blue};
-            }, data.getName(), new double[] {defaultColor.colorVal.red, defaultColor.colorVal.green, defaultColor.colorVal.blue}));
+            });
         }
         else
-            dataList.add(data);
+            data.put(name, supplier);
+    }
+
+    public <E extends Enum<E>> SendableChooser<E> addChooser(String name, E[] choosable, E defaultChosen) {
+        SendableChooser<E> chooser = new SendableChooser<>();
+
+        for (E _enum : choosable) {
+            if (_enum == defaultChosen) {
+                chooser.setDefaultOption(_enum.name(), _enum);
+            } else {
+                chooser.addOption(_enum.name(), _enum);
+            }
+        }
+
+        Shuffleboard.getTab(DashboardConstants.kDashboardTable).add(name, chooser);
+
+        return chooser;
     }
 }

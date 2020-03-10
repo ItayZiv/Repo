@@ -49,8 +49,8 @@ public class ControlPanelSubsystem extends SubsystemBase {
         colorMatch.addColorMatch(ControlPanel.ControlPanelColor.Red.colorVal);
         colorMatch.addColorMatch(ControlPanel.ControlPanelColor.Yellow.colorVal);
 
-        Dashboard.getInstance().addData(new DashboardItem<>(DriverStation.getInstance()::getGameSpecificMessage, "ColorKey", "Unknown"));
-        Dashboard.getInstance().addData(new DashboardItem<>(ControlPanel::getOffsetColorAssignment, "Color", ControlPanel.ControlPanelColor.Unknown));
+        Dashboard.getInstance().addData("ColorKey", DriverStation.getInstance()::getGameSpecificMessage);
+        Dashboard.getInstance().addData("Color", ControlPanel::getOffsetColorAssignment);
     }
 
     @Override

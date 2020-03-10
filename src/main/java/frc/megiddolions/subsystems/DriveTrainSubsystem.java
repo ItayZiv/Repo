@@ -16,10 +16,11 @@ import frc.megiddolions.Constants.DriveConstants;
 import frc.megiddolions.lib.control.drivetrain.Auto_DT;
 import frc.megiddolions.lib.control.drivetrain.DifferentialDrive;
 import frc.megiddolions.lib.control.drivetrain.DriveTrain;
+import frc.megiddolions.lib.hardware.motors.Stoppable;
 
 import java.util.function.DoubleSupplier;
 
-public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Auto_DT {
+public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Auto_DT, Stoppable {
     private final CANSparkMax leftMaster;
     private final CANSparkMax leftSlave;
     private final CANSparkMax rightMaster;

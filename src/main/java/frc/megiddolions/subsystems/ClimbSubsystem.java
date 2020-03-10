@@ -5,8 +5,9 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.megiddolions.Constants.ClimbConstants;
+import frc.megiddolions.lib.hardware.motors.Stoppable;
 
-public class ClimbSubsystem extends SubsystemBase {
+public class ClimbSubsystem extends SubsystemBase implements Stoppable {
     private final WPI_TalonSRX climbMotor;
 
     private final WPI_TalonSRX balanceMotor;

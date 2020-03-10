@@ -8,10 +8,11 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.megiddolions.Constants.ShooterConstants;
+import frc.megiddolions.lib.hardware.motors.Stoppable;
 import frc.megiddolions.lib.util;
 
 
-public class ShooterSubsystem extends SubsystemBase {
+public class ShooterSubsystem extends SubsystemBase implements Stoppable {
     private final WPI_TalonSRX shooterMaster;
     private final WPI_TalonSRX shooterSlave;
 
@@ -56,13 +57,13 @@ public class ShooterSubsystem extends SubsystemBase {
         return util.checkTolerance(indexMotor.getClosedLoopError(), ShooterConstants.kVelocityToleranceRevolutionsPerMinute);
     }
 
-    public void stop() {
+    public void stopShooter() {
         shooterMaster.set(ControlMode.Velocity, 0);
         shooterMaster.set(0);
         shooterMaster.stopMotor();
     }
 
-    public void stopFeed() {
+    public void stop() {
         indexMotor.stopMotor();
     }
 }

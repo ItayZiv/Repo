@@ -11,13 +11,26 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.megiddolions.lib.util;
 import frc.megiddolions.lib.control.FeedForward;
 import frc.megiddolions.lib.control.PID;
 import frc.megiddolions.lib.lambdas.UnitConverter;
 
+import java.util.Collections;
 import java.util.function.DoubleFunction;
 
 /**
@@ -170,6 +183,22 @@ public final class Constants
 
         public static final UnitConverter kPitchToDistance = (double angle) ->
                 0.0114 * Math.pow(angle, 2) - 0.0622 * angle + 3.3753;
+    }
+
+    public static final class AutoConstants {
+        public static final Pose2d kStartingPose = new Pose2d();
+        public static final double kMaxSpeedMetersPerSecond = 20;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 10;
+
+        public static final boolean kUsePathWeaver = false;
+
+        public static final DifferentialDriveVoltageConstraint autoVoltageConstraints = new DifferentialDriveVoltageConstraint(
+                DriveConstants.kFeedForwardConstants.toSimpleMotorFeedForward(), DriveConstants.kDriveKinematics, 10);
+
+        public static Transform2d kDefaultTrajectoryTransform = new Transform2d(new Pose2d(), new Pose2d(new Translation2d(-3, 0), new Rotation2d()));
+        public static Trajectory kDefaultTrajectory = TrajectoryGenerator.generateTrajectory(Constants.AutoConstants.kStartingPose,
+                Collections.emptyList(), Constants.AutoConstants.kStartingPose.transformBy(kDefaultTrajectoryTransform),
+                new TrajectoryConfig(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared).setReversed(true));
     }
 
     public static final class OIConstants {
