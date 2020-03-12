@@ -25,12 +25,17 @@ import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.megiddolions.auto.ActionType;
+import frc.megiddolions.auto.AutoAction;
+import frc.megiddolions.auto.DelayAction;
+import frc.megiddolions.lib.control.trajectories.Path;
 import frc.megiddolions.lib.util;
 import frc.megiddolions.lib.control.FeedForward;
 import frc.megiddolions.lib.control.PID;
 import frc.megiddolions.lib.lambdas.UnitConverter;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.function.DoubleFunction;
 
 /**
@@ -187,18 +192,33 @@ public final class Constants
 
     public static final class AutoConstants {
         public static final Pose2d kStartingPose = new Pose2d();
-        public static final double kMaxSpeedMetersPerSecond = 20;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 10;
-
-        public static final boolean kUsePathWeaver = false;
+        public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 2;
 
         public static final DifferentialDriveVoltageConstraint autoVoltageConstraints = new DifferentialDriveVoltageConstraint(
                 DriveConstants.kFeedForwardConstants.toSimpleMotorFeedForward(), DriveConstants.kDriveKinematics, 10);
 
-        public static Transform2d kDefaultTrajectoryTransform = new Transform2d(new Pose2d(), new Pose2d(new Translation2d(-3, 0), new Rotation2d()));
+        public static final TrajectoryConfig config =
+                new TrajectoryConfig(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared)
+                        .setKinematics(DriveConstants.kDriveKinematics)
+                        .addConstraint(autoVoltageConstraints);
+
+        public static Transform2d kDefaultTrajectoryTransform = new Transform2d(new Pose2d(), new Pose2d(-3, 0, new Rotation2d()));
         public static Trajectory kDefaultTrajectory = TrajectoryGenerator.generateTrajectory(Constants.AutoConstants.kStartingPose,
                 Collections.emptyList(), Constants.AutoConstants.kStartingPose.transformBy(kDefaultTrajectoryTransform),
                 new TrajectoryConfig(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared).setReversed(true));
+
+        public static final Path kTestAuto = new Path(List.of(new Pose2d(),
+                new Pose2d(3, 2, new Rotation2d())), false);
+
+        public static final Path kBasicShoot = new Path(List.of(new Pose2d(6.7455288, 1.9025616, new Rotation2d()),
+                new Pose2d(0.5, 0, new Rotation2d())), false);
+
+        public static final Path kBasicPickup = new Path(List.of(new Pose2d(),
+                new Pose2d(3.0547056, 1.6511016, new Rotation2d()),
+                new Pose2d(5.0746152, 1.6511016, new Rotation2d()),
+                kBasicShoot.getFirstPose()), true);
+
     }
 
     public static final class OIConstants {

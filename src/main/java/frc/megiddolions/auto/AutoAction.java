@@ -1,11 +1,7 @@
 package frc.megiddolions.auto;
 
 
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.megiddolions.lib.util;
-
-import java.io.IOException;
 
 public class AutoAction {
     public final ActionType type;
@@ -15,7 +11,13 @@ public class AutoAction {
         this.type = type;
     }
 
-    public String getPath() {
-        return "";
+    public static AutoAction SpinShooter() {
+        return new AutoAction(ActionType.SpinShooter);
+    }
+    public static AutoAction Feed() {
+        return  new AutoAction(ActionType.Feed);
+    }
+    public static AutoAction Align() {
+        return new AutoAction(ActionType.AlignTarget);
     }
 }

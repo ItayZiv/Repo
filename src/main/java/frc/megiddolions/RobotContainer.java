@@ -17,20 +17,21 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.megiddolions.Constants.*;
-import frc.megiddolions.auto.AutoAction;
-import frc.megiddolions.auto.Autos;
-import frc.megiddolions.auto.RamseteAction;
+import frc.megiddolions.auto.*;
 import frc.megiddolions.commands.AlignTargetCommand;
 import frc.megiddolions.commands.ControlPanelControlCommand;
 import frc.megiddolions.commands.StopCommand;
 import frc.megiddolions.commands.drive.ArcadeDriveCommand;
 import frc.megiddolions.commands.drive.TankDriveCommand;
 import frc.megiddolions.lib.Gamepad;
+import frc.megiddolions.lib.control.trajectories.Path;
 import frc.megiddolions.lib.dashboard.Dashboard;
+import frc.megiddolions.lib.hardware.motors.Stoppable;
 import frc.megiddolions.lib.util;
 import frc.megiddolions.subsystems.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -54,7 +55,7 @@ public class RobotContainer
     private final VisionSubsystem vision;
 
     private final SendableChooser<Autos> autoChooser;
-    private final Autos[] autos = new Autos[] {Autos.Test};
+    private final Autos[] autos = new Autos[] {Autos.Test, Autos.Full};
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
      */
@@ -117,65 +118,60 @@ public class RobotContainer
      */
     public Command getAutonomousCommand()
     {
-        AtomicBoolean useDefaultAuto = new AtomicBoolean(false);
+        boolean useDefaultAuto = false;
         List<AutoAction> actions = autoChooser.getSelected().actions;
-        actions.forEach(autoAction -> {
-            switch (autoAction.type) {
-                case SpinShooter:
-                    autoAction.command = new InstantCommand(() -> shooter.spin(ShooterConstants.kShooterRPM), shooter);
-                    break;
-                case Drive:
-                    Trajectory traj;
-                    if (AutoConstants.kUsePathWeaver) {
-                        try {
-                            traj = util.getTrajectory(autoAction.getPath());
-                        } catch (IOException e) {
-                            try {
-                                DriverStation.reportError("Unable to open trajectory: " + ((RamseteAction) autoAction).path, e.getStackTrace());
-                            } catch (Exception ex) {
-                                DriverStation.reportError("Unable to open trajectory and unable to cast to Ramsete" +
-                                        ex.getMessage(), e.getStackTrace());
-                            }
-                            traj = util.kEmptyTrajectory;
-                            useDefaultAuto.set(true);
-                        }
-                    }
-                    else {
-                        traj = util.kEmptyTrajectory;
-                        traj = TrajectoryGenerator.generateTrajectory()
-                    }
-                    if (!useDefaultAuto.get())
-                        autoAction.command = new ParallelDeadlineGroup(
-                                new WaitCommand(traj.getTotalTimeSeconds() + 2),
-                                util.generateRamseteCommand(traj, driveTrain::getPose, DriveConstants.kFeedForwardConstants,
-                                        DriveConstants.kVelocityPID, DriveConstants.kDriveKinematics,
-                                        driveTrain::getWheelSpeeds, driveTrain::tankDriveVolts, driveTrain));
-                    else
+        try {
+            actions.forEach(autoAction -> {
+                switch (autoAction.type) {
+                    case SpinShooter:
+                        autoAction.command = new InstantCommand(() -> shooter.spin(ShooterConstants.kShooterRPM), shooter);
+                        break;
+                    case Drive:
+                        Trajectory trajectory = ((RamseteAction) autoAction).getPath().makeTrajectory(AutoConstants.config);
+                        autoAction.command = util.generateRamseteCommand(trajectory, driveTrain::getPose,
+                                DriveConstants.kFeedForwardConstants, DriveConstants.kVelocityPID,
+                                DriveConstants.kDriveKinematics, driveTrain::getWheelSpeeds, driveTrain::tankDriveVolts,
+                                driveTrain).withTimeout(trajectory.getTotalTimeSeconds() + 2);
+                        break;
+                    case AlignTarget:
+                        autoAction.command = new AlignTargetCommand(driveTrain, vision).withTimeout(3);
+                        break;
+                    case StartIntake:
+                        autoAction.command = new InstantCommand(() -> intake.intake(1), intake);
+                        break;
+                    case Feed:
+                        autoAction.command = new InstantCommand(() -> shooter.feedShooter(-0.5));
+                        break;
+                    case Delay:
+                        autoAction.command = new WaitCommand(((DelayAction)autoAction).getLength());
+                        break;
+                    case Stop:
+                        autoAction.command = new StopCommand(((StopAction)autoAction)
+                                .getStoppables(driveTrain, shooter, intake).toArray(Stoppable[]::new));
+                        break;
+                    case End:
+                        autoAction.command = new InstantCommand(() -> {
+                            shooter.stop();
+                            shooter.stopShooter();
+                            driveTrain.stop();
+                            intake.stop();
+                        }, shooter, driveTrain, intake);
+                        break;
+                    default:
                         autoAction.command = new InstantCommand();
-                    break;
-                case StartIntake:
-                    autoAction.command = new InstantCommand(() -> intake.intake(1), intake);
-                    break;
-                case Feed:
-                    autoAction.command = new InstantCommand(() -> shooter.feedShooter(-0.5));
-                    break;
-                case Delay:
-                    autoAction.command = new StopCommand(shooter, driveTrain).andThen(new WaitCommand(0.5));
-                    break;
-                case Stop:
-                    autoAction.command = new InstantCommand(() -> {
-                        shooter.stop();
-                        shooter.stopShooter();
-                        driveTrain.stop();
-                        intake.stop();
-                    }, shooter, driveTrain, intake);
-                    break;
-                default:
-                    autoAction.command = new InstantCommand();
-                    break;
-            }
-        });
-        if (!useDefaultAuto.get()) {
+                        break;
+                }
+            });
+        }
+        catch (NullPointerException e) {
+            DriverStation.reportError("Unable to import auto. Probably a error getting the path", e.getStackTrace());
+            useDefaultAuto = true;
+        }
+        catch (Exception e) {
+            DriverStation.reportError("Unable to import auto for unknown reason", e.getStackTrace());
+            useDefaultAuto = true;
+        }
+        if (!useDefaultAuto) {
             SequentialCommandGroup autoGroup = new SequentialCommandGroup();
             actions.forEach(autoAction -> autoGroup.addCommands(autoAction.command));
             return autoGroup;
@@ -190,6 +186,12 @@ public class RobotContainer
                 DriveConstants.kDriveKinematics, driveTrain::getWheelSpeeds, driveTrain::tankDriveVolts, driveTrain),
                 new InstantCommand(() -> shooter.feedShooter(-0.6)),
                 new WaitCommand(2.5), new InstantCommand(() -> shooter.feedShooter(-0.6)),
-                new WaitCommand(2.5), new InstantCommand(() -> shooter.feedShooter(-0.6)));
+                new WaitCommand(2.5), new InstantCommand(() -> shooter.feedShooter(-0.6)),
+                new InstantCommand(() -> {
+                    shooter.stop();
+                    shooter.stopShooter();
+                    driveTrain.stop();
+                    intake.stop();
+                }, shooter, driveTrain, intake));
     }
 }

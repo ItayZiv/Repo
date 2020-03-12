@@ -1,19 +1,16 @@
 package frc.megiddolions.auto;
 
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import frc.megiddolions.lib.util;
-
-import java.io.IOException;
+import frc.megiddolions.lib.control.trajectories.Path;
 
 public class RamseteAction extends AutoAction {
-    public final String path;
+    public final Path path;
 
-    public RamseteAction(String path) {
+    public RamseteAction(Path path) {
         super(ActionType.Drive);
         this.path = path;
     }
 
-    public String getPath() {
+    public Path getPath() {
         return path;
     }
 }
