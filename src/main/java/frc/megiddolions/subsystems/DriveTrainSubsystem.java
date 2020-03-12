@@ -6,7 +6,6 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
@@ -16,6 +15,8 @@ import frc.megiddolions.Constants.DriveConstants;
 import frc.megiddolions.lib.control.drivetrain.Auto_DT;
 import frc.megiddolions.lib.control.drivetrain.DifferentialDrive;
 import frc.megiddolions.lib.control.drivetrain.DriveTrain;
+import frc.megiddolions.lib.hardware.motors.Shifter;
+import frc.megiddolions.lib.hardware.motors.Shifter.ShifterState;
 import frc.megiddolions.lib.hardware.motors.Stoppable;
 
 import java.util.function.DoubleSupplier;
@@ -28,7 +29,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Au
 
     private final DifferentialDrive drive;
 
-    private final Solenoid shifter;
+    private final Shifter shifter;
 
     private final CANEncoder leftEncoder;
     private final CANEncoder rightEncoder;
@@ -44,7 +45,8 @@ public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Au
         rightMaster = new CANSparkMax(DriveConstants.kFrontRightSpark, MotorType.kBrushless);
         rightSlave = new CANSparkMax(DriveConstants.kRearRightSpark, MotorType.kBrushless);
 
-        shifter = new Solenoid(DriveConstants.kShifterPCMPort);
+        shifter = new Shifter(DriveConstants.kShifterPCMPort, DriveConstants.kMotorWheelPowerGearRatio,
+                DriveConstants.kMotorWheelSpeedGearRatio, DriveConstants.kDistancePerWheelRevolution);
 
         leftMaster.restoreFactoryDefaults();
         leftSlave.restoreFactoryDefaults();
@@ -56,10 +58,6 @@ public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Au
 
         leftEncoder = leftMaster.getEncoder();
         rightEncoder = rightMaster.getEncoder();
-        leftEncoder.setPositionConversionFactor(DriveConstants.kDistancePerMotorRevolution);
-        rightEncoder.setPositionConversionFactor(DriveConstants.kDistancePerMotorRevolution);
-        leftEncoder.setVelocityConversionFactor(DriveConstants.kSpeedMetersPerSecondFromRevolutionPerMinute);
-        rightEncoder.setVelocityConversionFactor(DriveConstants.kSpeedMetersPerSecondFromRevolutionPerMinute);
 
         navX = new AHRS(SPI.Port.kMXP);
         headingSupplier = () -> navX.getAngle() * -1;
@@ -93,8 +91,13 @@ public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Au
     }
 
     public void setShifter(ShifterState state) {
-        //TODO: Reset encoders and modify ConversionFactors when switching gear, and keep the previous pose
         shifter.set(state.value);
+
+        leftEncoder.setPositionConversionFactor(shifter.outputUnitsPerInputRevolution());
+        rightEncoder.setPositionConversionFactor(shifter.outputUnitsPerInputRevolution());
+        leftEncoder.setVelocityConversionFactor(shifter.outputUnitsPerSecondPerInputRevolutionsPerMinute());
+        rightEncoder.setVelocityConversionFactor(shifter.outputUnitsPerSecondPerInputRevolutionsPerMinute());
+        resetOdometry(getPose());
     }
 
     public ShifterState getShifter() {
@@ -140,25 +143,6 @@ public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Au
         drive.stop();
         leftMaster.stopMotor();
         rightMaster.stopMotor();
-    }
-
-    public enum ShifterState {
-        Speed(false),
-        Power(true);
-
-        boolean value;
-
-        ShifterState(boolean value) {
-            this.value = value;
-        }
-
-        public ShifterState swap() {
-            return getState(!this.value);
-        }
-
-        public static ShifterState getState(boolean value) {
-            return (value) ? Power : Speed;
-        }
     }
 }
 

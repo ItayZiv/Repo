@@ -54,10 +54,10 @@ public final class Constants
 
         private static final double kWheelDiameterInches = 6;
         public static final double kWheelDiameterMeters = Units.inchesToMeters(kWheelDiameterInches);
-        public static final double kMotorGearRatio = 5.952380952;
+        public static final double kMotorWheelPowerGearRatio = 5.952380952;
+        public static final double kMotorWheelSpeedGearRatio = 2.619047619;
 
-        public static final double kDistancePerMotorRevolution = (kWheelDiameterMeters * Math.PI) / kMotorGearRatio;
-        public static final double kSpeedMetersPerSecondFromRevolutionPerMinute = kDistancePerMotorRevolution * (1.0 / 60);
+        public static final double kDistancePerWheelRevolution = kWheelDiameterMeters * Math.PI;
 
         public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidthMeters);
 
@@ -114,13 +114,6 @@ public final class Constants
                 kRevolutionsPerMinuteToUnitsPer100ms.convert(kVelocityToleranceRevolutionsPerMinute);
         public static final double kAlignmentTolerance = 1;
 
-        public static final double defaultSpeed = 0.2;
-
-        public static final int kErrorOffset = 0;
-        public static final int kMaxError = 400;
-
-        public static final int kMicroSwitch = 4;
-
         public static TalonSRXConfiguration getShooterTalonConfiguration(boolean isMaster) {
             TalonSRXConfiguration config = new TalonSRXConfiguration();
             config.continuousCurrentLimit = kShooterConstantCurrentLimit;
@@ -153,8 +146,6 @@ public final class Constants
         public static final int kSpinTalon = 7;
 
         public static final int kPistonPort = 3;
-
-        public static final int kSpinnerPCMPort = 1;
 
         public static final int kSpinsPerColor = 4;
         public static final int kColorsPerRevolution = 8;
