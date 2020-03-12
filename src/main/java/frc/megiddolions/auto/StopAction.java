@@ -3,6 +3,7 @@ package frc.megiddolions.auto;
 import frc.megiddolions.lib.ObjectFactory;
 import frc.megiddolions.lib.hardware.motors.Stoppable;
 
+import java.util.Collections;
 import java.util.List;
 
 public class StopAction extends AutoAction {
@@ -14,7 +15,7 @@ public class StopAction extends AutoAction {
     }
 
     public List<Stoppable> getStoppables(Stoppable driveTrain, Stoppable shooter, Stoppable intake) {
-        List<Stoppable> stoppableList = List.of();
+        List<Stoppable> stoppableList = new java.util.ArrayList<>();
         stoppableTypes.forEach(stoppableType -> {
             switch (stoppableType) {
                 case Drivetrain:
@@ -29,10 +30,6 @@ public class StopAction extends AutoAction {
             }
         });
         return stoppableList;
-    }
-
-    public static StopAction Stop() {
-        return new StopAction(AutoStoppables.Drivetrain, AutoStoppables.ShooterFeed);
     }
 
     public enum AutoStoppables {

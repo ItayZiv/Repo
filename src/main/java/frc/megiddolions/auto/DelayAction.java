@@ -12,7 +12,4 @@ public class DelayAction extends AutoAction {
         return length;
     }
 
-    public static DelayAction FeedDelay() {
-        return new DelayAction(0.4);
-    }
 }

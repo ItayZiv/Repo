@@ -4,6 +4,7 @@ public enum ActionType {
     SpinShooter,
     Drive,
     AlignTarget,
+    Shoot,
     StartIntake,
     Feed,
     Delay,

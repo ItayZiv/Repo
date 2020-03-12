@@ -119,62 +119,16 @@ public class RobotContainer
     public Command getAutonomousCommand()
     {
         boolean useDefaultAuto = false;
-        List<AutoAction> actions = autoChooser.getSelected().actions;
+        Auto auto = autoChooser.getSelected().auto;
         try {
-            actions.forEach(autoAction -> {
-                switch (autoAction.type) {
-                    case SpinShooter:
-                        autoAction.command = new InstantCommand(() -> shooter.spin(ShooterConstants.kShooterRPM), shooter);
-                        break;
-                    case Drive:
-                        Trajectory trajectory = ((RamseteAction) autoAction).getPath().makeTrajectory(AutoConstants.config);
-                        autoAction.command = util.generateRamseteCommand(trajectory, driveTrain::getPose,
-                                DriveConstants.kFeedForwardConstants, DriveConstants.kVelocityPID,
-                                DriveConstants.kDriveKinematics, driveTrain::getWheelSpeeds, driveTrain::tankDriveVolts,
-                                driveTrain).withTimeout(trajectory.getTotalTimeSeconds() + 2);
-                        break;
-                    case AlignTarget:
-                        autoAction.command = new AlignTargetCommand(driveTrain, vision).withTimeout(3);
-                        break;
-                    case StartIntake:
-                        autoAction.command = new InstantCommand(() -> intake.intake(1), intake);
-                        break;
-                    case Feed:
-                        autoAction.command = new InstantCommand(() -> shooter.feedShooter(-0.5));
-                        break;
-                    case Delay:
-                        autoAction.command = new WaitCommand(((DelayAction)autoAction).getLength());
-                        break;
-                    case Stop:
-                        autoAction.command = new StopCommand(((StopAction)autoAction)
-                                .getStoppables(driveTrain, shooter, intake).toArray(Stoppable[]::new));
-                        break;
-                    case End:
-                        autoAction.command = new InstantCommand(() -> {
-                            shooter.stop();
-                            shooter.stopShooter();
-                            driveTrain.stop();
-                            intake.stop();
-                        }, shooter, driveTrain, intake);
-                        break;
-                    default:
-                        autoAction.command = new InstantCommand();
-                        break;
-                }
-            });
-        }
-        catch (NullPointerException e) {
-            DriverStation.reportError("Unable to import auto. Probably a error getting the path", e.getStackTrace());
-            useDefaultAuto = true;
+            auto.generateAutoCommands(driveTrain, shooter, intake, vision);
         }
         catch (Exception e) {
-            DriverStation.reportError("Unable to import auto for unknown reason", e.getStackTrace());
+            DriverStation.reportError("Unable to import auto.", e.getStackTrace());
             useDefaultAuto = true;
         }
         if (!useDefaultAuto) {
-            SequentialCommandGroup autoGroup = new SequentialCommandGroup();
-            actions.forEach(autoAction -> autoGroup.addCommands(autoAction.command));
-            return autoGroup;
+            return auto.generateAuto();
         }
         else
             return getDefaultAuto();
