@@ -2,6 +2,7 @@ package frc.megiddolions.subsystems;
 
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
@@ -42,7 +43,8 @@ public class ShooterSubsystem extends SubsystemBase implements Stoppable {
     }
 
     public void spin(int revolutionPerMinute) {
-        shooterMaster.set(ControlMode.Velocity, revolutionPerMinute);
+        shooterMaster.set(ControlMode.Velocity, revolutionPerMinute, DemandType.ArbitraryFeedForward,
+                shooterFeedForward.calculate(util.UnitsPerMinuteToUnitsPerSecond(revolutionPerMinute)));
     }
 
     public void spin(double power) {

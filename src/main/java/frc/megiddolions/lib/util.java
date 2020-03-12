@@ -103,12 +103,16 @@ public class util {
         slave.setInverted((inverted) ? InvertType.OpposeMaster : InvertType.FollowMaster);
     }
 
-    public static double RevolutionsPerMinuteToRevolutionsPer100ms(double RevolutionsPerMinute) {
-        return RevolutionsPerMinute / 600;
+    public static double UnitsPerMinuteToUnitsPerSecond(double UnitsPerMinute) {
+        return UnitsPerMinute / 60;
     }
 
-    public static double RevolutionsPer100msToRevolutionsPerMinute(double RevolutionsPer100ms) {
-        return RevolutionsPer100ms * 600;
+    public static double UnitsPerMinuteToUnitsPer100ms(double UnitsPerMinute) {
+        return UnitsPerMinute / 600;
+    }
+
+    public static double UnitsPer100msToUnitsPerMinute(double UnitsPer100ms) {
+        return UnitsPer100ms * 600;
     }
 
     public static boolean checkRange(double value, double min, double max) {

@@ -9,25 +9,16 @@ package frc.megiddolions;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
-import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Transform2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.util.Units;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.megiddolions.auto.ActionType;
-import frc.megiddolions.auto.AutoAction;
-import frc.megiddolions.auto.DelayAction;
 import frc.megiddolions.lib.control.trajectories.Path;
 import frc.megiddolions.lib.util;
 import frc.megiddolions.lib.control.FeedForward;
@@ -36,7 +27,6 @@ import frc.megiddolions.lib.lambdas.UnitConverter;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.DoubleFunction;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -105,13 +95,13 @@ public final class Constants
                 (double units) -> units / (kEncoderGearing * kEncoderUnitsPerRevolution);
         public static final UnitConverter kUnitsPer100msToRevolutionsPerMinute =
                 (double unitsPer100ms) ->
-                        util.RevolutionsPer100msToRevolutionsPerMinute(kUnitsToRevolutions.convert(unitsPer100ms));
+                        util.UnitsPer100msToUnitsPerMinute(kUnitsToRevolutions.convert(unitsPer100ms));
 
         public static final UnitConverter kRevolutionsToUnits =
                 (double revolutions) -> revolutions * kEncoderGearing * kEncoderUnitsPerRevolution;
         public static final UnitConverter kRevolutionsPerMinuteToUnitsPer100ms =
                 (double revolutionsPerMinute) ->
-                        util.RevolutionsPerMinuteToRevolutionsPer100ms(kRevolutionsToUnits.convert(revolutionsPerMinute));
+                        util.UnitsPerMinuteToUnitsPer100ms(kRevolutionsToUnits.convert(revolutionsPerMinute));
 
         public static final PID kVelocityPID = new PID(1.2, 0.8, 0.8, 750); // 0.32 0 0.8
 
