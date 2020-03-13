@@ -1,4 +1,4 @@
-package frc.megiddolions.lib;
+package frc.megiddolions.lib.hardware.oi;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -21,6 +21,12 @@ public class Gamepad extends XboxController {
     public final POVButton dpad_down;
     public final POVButton dpad_left;
 
+    public final AxisActiveTrigger leftStickYActivity;
+    public final AxisActiveTrigger leftStickXActivity;
+    public final AxisActiveTrigger rightStickYActivity;
+    public final AxisActiveTrigger rightStickXActivity;
+    public final AxisActiveTrigger triggerActivity;
+
     public Gamepad(final int port) {
         super(port);
 
@@ -38,6 +44,12 @@ public class Gamepad extends XboxController {
         dpad_right = new POVButton(this, 90);
         dpad_down = new POVButton(this, 180);
         dpad_left = new POVButton(this, 270);
+
+        leftStickYActivity = new AxisActiveTrigger(() -> getY(Hand.kLeft));
+        leftStickXActivity = new AxisActiveTrigger(() -> getX(Hand.kLeft));
+        rightStickYActivity = new AxisActiveTrigger(() -> getY(Hand.kRight));
+        rightStickXActivity = new AxisActiveTrigger(() -> getX(Hand.kRight));
+        triggerActivity = new AxisActiveTrigger(this::getCombinedTriggers);
     }
 
     public double getCombinedTriggers() {

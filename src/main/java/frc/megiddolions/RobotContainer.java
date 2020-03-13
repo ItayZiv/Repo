@@ -12,30 +12,19 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.megiddolions.Constants.*;
 import frc.megiddolions.auto.*;
 import frc.megiddolions.commands.AlignTargetCommand;
 import frc.megiddolions.commands.ControlPanelControlCommand;
-import frc.megiddolions.commands.StopCommand;
 import frc.megiddolions.commands.drive.ArcadeDriveCommand;
 import frc.megiddolions.commands.drive.TankDriveCommand;
-import frc.megiddolions.lib.Gamepad;
-import frc.megiddolions.lib.control.trajectories.Path;
+import frc.megiddolions.lib.hardware.oi.Gamepad;
 import frc.megiddolions.lib.dashboard.Dashboard;
 import frc.megiddolions.lib.hardware.motors.Shifter;
-import frc.megiddolions.lib.hardware.motors.Stoppable;
 import frc.megiddolions.lib.util;
 import frc.megiddolions.subsystems.*;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -97,7 +86,8 @@ public class RobotContainer
 
         //Feed shooter and backup
         gamepad.X.whileHeld(() -> shooter.feedShooter(-0.5), shooter).whenReleased(shooter::stop, shooter);
-        new JoystickButton(leftJoystick, 10).whenPressed(() -> shooter.feedShooter(0.8)).whenReleased(() -> shooter.feedShooter(0));
+        new JoystickButton(leftJoystick, 10).whenPressed(() -> shooter.feedShooter(0.8))
+                .whenReleased(() -> shooter.feedShooter(0));
 
         //Intake in each direction
         gamepad.rightBumper.whileHeld(() -> intake.intake(1), intake).whenReleased(intake::stop, intake); //Intake
@@ -107,9 +97,10 @@ public class RobotContainer
         gamepad.dpad_up.whileHeld(() -> climb.climb(0.8)).whenReleased(climb::stop, climb);
         gamepad.dpad_down.whileHeld(() -> climb.climb(-0.8)).whenReleased(climb::stop, climb);
 
-        gamepad.leftStick.whenPressed(
-                () -> controlPanel.setMotorExtension(!controlPanel.getMotorExtension()), controlPanel).whileHeld(
-                        new ControlPanelControlCommand(controlPanel, gamepad::getCombinedTriggers));
+        gamepad.triggerActivity
+                .whenActive(() -> controlPanel.setMotorExtension(true), controlPanel)
+                .whileActiveContinuous(new ControlPanelControlCommand(controlPanel, gamepad::getCombinedTriggers))
+                .whenInactive(() -> controlPanel.setMotorExtension(false), controlPanel);
     }
 
 
