@@ -78,7 +78,7 @@ public class util {
     }
 
     public static double clamp(double num, double max) {
-        return clamp(num, max, -max);
+        return clamp(num, -max, max);
     }
 
     public static double clamp(double num, double min, double max) {
@@ -86,7 +86,7 @@ public class util {
     }
 
     public static int clamp(int num, int max) {
-        return clamp(num, max, -max);
+        return clamp(num, -max, max);
     }
 
     public static int clamp(int num, int min, int max) {
@@ -124,7 +124,7 @@ public class util {
     }
 
     public static boolean checkTolerance(double value, double target,  double tolerance) {
-        return value >= target - tolerance && value <= target + tolerance;
+        return checkRange(value, target - tolerance, target + tolerance);
     }
 
     public static double deadband(double value, double deadband) {

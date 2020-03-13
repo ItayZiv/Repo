@@ -58,6 +58,10 @@ public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Au
 
         leftEncoder = leftMaster.getEncoder();
         rightEncoder = rightMaster.getEncoder();
+        leftEncoder.setPositionConversionFactor(shifter.outputUnitsPerInputRevolution());
+        rightEncoder.setPositionConversionFactor(shifter.outputUnitsPerInputRevolution());
+        leftEncoder.setVelocityConversionFactor(shifter.outputUnitsPerSecondPerInputRevolutionsPerMinute());
+        rightEncoder.setVelocityConversionFactor(shifter.outputUnitsPerSecondPerInputRevolutionsPerMinute());
 
         navX = new AHRS(SPI.Port.kMXP);
         headingSupplier = () -> navX.getAngle() * -1;

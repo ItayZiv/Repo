@@ -26,6 +26,7 @@ import frc.megiddolions.commands.drive.TankDriveCommand;
 import frc.megiddolions.lib.Gamepad;
 import frc.megiddolions.lib.control.trajectories.Path;
 import frc.megiddolions.lib.dashboard.Dashboard;
+import frc.megiddolions.lib.hardware.motors.Shifter;
 import frc.megiddolions.lib.hardware.motors.Stoppable;
 import frc.megiddolions.lib.util;
 import frc.megiddolions.subsystems.*;
@@ -33,6 +34,7 @@ import frc.megiddolions.subsystems.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -147,5 +149,15 @@ public class RobotContainer
                     driveTrain.stop();
                     intake.stop();
                 }, shooter, driveTrain, intake));
+    }
+
+    public Command getInitCommand() {
+        return new InstantCommand(() -> {}, climb, controlPanel, driveTrain, intake, shooter, vision) {
+            @Override
+            public void initialize() {
+                driveTrain.setShifter(Shifter.ShifterState.Power);
+                driveTrain.reset();
+            }
+        };
     }
 }
