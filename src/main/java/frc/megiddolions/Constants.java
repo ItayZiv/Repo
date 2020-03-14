@@ -61,12 +61,12 @@ public final class Constants
 
         public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidthMeters);
 
-        public static final double ksVolts = 1.07;
-        public static final double kvVoltsSecondsPerMeter = 1.44;
-        public static final double kaVoltsSecondsSquaredPerMeter = 0.052;
+        public static final double ksVolts = 0.223;
+        public static final double kvVoltsSecondsPerMeter = 1.58;
+        public static final double kaVoltsSecondsSquaredPerMeter = 0.27;
         public static final FeedForward kFeedForwardConstants = new FeedForward(ksVolts, kvVoltsSecondsPerMeter, kaVoltsSecondsSquaredPerMeter);
 
-        public static final double kVelocityP = 1.93;
+        public static final double kVelocityP = 11.1;
         public static final PID kVelocityPID = new PID(kVelocityP, 0, 0);
 
         public static final PID kPositionVisionPID = new PID(0.04, 0.001, 0.002);
@@ -173,8 +173,8 @@ public final class Constants
 
     public static final class AutoConstants {
         public static final Pose2d kStartingPose = new Pose2d();
-        public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 2;
+        public static final double kMaxSpeedMetersPerSecond = 10;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 8;
 
         public static final DifferentialDriveVoltageConstraint autoVoltageConstraints = new DifferentialDriveVoltageConstraint(
                 DriveConstants.kFeedForwardConstants.toSimpleMotorFeedForward(), DriveConstants.kDriveKinematics, 10);
