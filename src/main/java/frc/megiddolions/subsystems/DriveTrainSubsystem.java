@@ -45,8 +45,8 @@ public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Au
         rightMaster = new CANSparkMax(DriveConstants.kFrontRightSpark, MotorType.kBrushless);
         rightSlave = new CANSparkMax(DriveConstants.kRearRightSpark, MotorType.kBrushless);
 
-        shifter = new Shifter(DriveConstants.kShifterPCMPort, DriveConstants.kMotorWheelPowerGearRatio,
-                DriveConstants.kMotorWheelSpeedGearRatio, DriveConstants.kDistancePerWheelRevolution);
+        shifter = new Shifter(DriveConstants.kShifterPCMPort, DriveConstants.kMotorWheelLowGearRatio,
+                DriveConstants.kMotorWheelHighGearRatio, DriveConstants.kDistancePerWheelRevolution);
 
         leftMaster.restoreFactoryDefaults();
         leftSlave.restoreFactoryDefaults();
@@ -73,7 +73,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Au
             rightMaster.set(right);
         });
 
-        setShifter(ShifterState.Power);
+        setShifter(ShifterState.Low);
         reset();
     }
 

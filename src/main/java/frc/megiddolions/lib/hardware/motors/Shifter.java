@@ -3,18 +3,18 @@ package frc.megiddolions.lib.hardware.motors;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class Shifter extends Solenoid {
-    private final double kGearRatioPower;
-    private final double kGearRatioSpeed;
+    private final double kLowGearRatio;
+    private final double kHighGearRatio;
     private final double kUnitsPerOutputRevolution;
 
-    public Shifter(int port, double gearRatioPower, double gearRatioSpeed) {
-        this(port, gearRatioPower, gearRatioSpeed, 0);
+    public Shifter(int port, double lowGearRatio, double highGearRatio) {
+        this(port, lowGearRatio, highGearRatio, 0);
     }
 
-    public Shifter(int port, double gearRatioPower, double gearRatioSpeed, double unitsPerOutputRevolution) {
+    public Shifter(int port, double lowGearRatio, double highGearRatio, double unitsPerOutputRevolution) {
         super(port);
-        this.kGearRatioPower = gearRatioPower;
-        this.kGearRatioSpeed = gearRatioSpeed;
+        this.kLowGearRatio = lowGearRatio;
+        this.kHighGearRatio = highGearRatio;
         this.kUnitsPerOutputRevolution = unitsPerOutputRevolution;
     }
 
@@ -32,12 +32,12 @@ public class Shifter extends Solenoid {
 
     public double getGearRatio(ShifterState state) {
         switch (state) {
-            case Power:
-                return kGearRatioPower;
-            case Speed:
-                return kGearRatioSpeed;
+            case Low:
+                return kLowGearRatio;
+            case High:
+                return kHighGearRatio;
             default:
-                return getGearRatio(ShifterState.Power);
+                return getGearRatio(ShifterState.Low);
         }
     }
 
@@ -58,8 +58,8 @@ public class Shifter extends Solenoid {
     }
 
     public enum ShifterState {
-        Speed(false),
-        Power(true),
+        High(false),
+        Low(true),
         Unknown(false);
 
         public final boolean value;
@@ -73,7 +73,7 @@ public class Shifter extends Solenoid {
         }
 
         public static ShifterState getState(boolean value) {
-            return (value) ? Power : Speed;
+            return (value) ? Low : High;
         }
     }
 }

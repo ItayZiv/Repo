@@ -146,7 +146,7 @@ public class RobotContainer
         return new InstantCommand(() -> {}, climb, controlPanel, driveTrain, intake, shooter, vision) {
             @Override
             public void initialize() {
-                driveTrain.setShifter(Shifter.ShifterState.Power);
+                driveTrain.setShifter(Shifter.ShifterState.Low);
                 driveTrain.reset();
             }
         };

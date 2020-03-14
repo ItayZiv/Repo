@@ -6,13 +6,13 @@ public class SmartShifter extends Shifter {
     private final double kMaxVelocityLowGear;
     private LinearFilter speedFilter = LinearFilter.movingAverage(15);
 
-    public SmartShifter(int port, double gearRatioPower, double gearRatioSpeed, double maxVelocityLowGear) {
-        this(port, gearRatioPower, gearRatioSpeed, 0, maxVelocityLowGear);
+    public SmartShifter(int port, double lowGearRatio, double highGearRatio, double maxVelocityLowGear) {
+        this(port, lowGearRatio, highGearRatio, 0, maxVelocityLowGear);
     }
 
-    public SmartShifter(int port, double gearRatioPower, double gearRatioSpeed, double unitsPerOutputRevolution,
+    public SmartShifter(int port, double lowGearRatio, double highGearRatio, double unitsPerOutputRevolution,
                         double maxVelocityLowGear) {
-        super(port, gearRatioPower, gearRatioSpeed, unitsPerOutputRevolution);
+        super(port, lowGearRatio, highGearRatio, unitsPerOutputRevolution);
         this.kMaxVelocityLowGear = maxVelocityLowGear;
     }
 
@@ -20,8 +20,8 @@ public class SmartShifter extends Shifter {
         double filteredVelocity = speedFilter.calculate(Math.abs(velocity));
 
         if (filteredVelocity >= kMaxVelocityLowGear)
-            setState(ShifterState.Speed);
+            setState(ShifterState.High);
         else
-            setState(ShifterState.Power);
+            setState(ShifterState.Low);
     }
 }
