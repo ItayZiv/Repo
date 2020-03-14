@@ -15,8 +15,8 @@ import frc.megiddolions.Constants.DriveConstants;
 import frc.megiddolions.lib.control.drivetrain.Auto_DT;
 import frc.megiddolions.lib.control.drivetrain.DifferentialDrive;
 import frc.megiddolions.lib.control.drivetrain.DriveTrain;
-import frc.megiddolions.lib.hardware.motors.Shifter;
 import frc.megiddolions.lib.hardware.motors.Shifter.ShifterState;
+import frc.megiddolions.lib.hardware.motors.SmartShifter;
 import frc.megiddolions.lib.hardware.motors.Stoppable;
 
 import java.util.function.DoubleSupplier;
@@ -29,7 +29,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Au
 
     private final DifferentialDrive drive;
 
-    private final Shifter shifter;
+    private final SmartShifter shifter;
 
     private final CANEncoder leftEncoder;
     private final CANEncoder rightEncoder;
@@ -45,8 +45,9 @@ public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Au
         rightMaster = new CANSparkMax(DriveConstants.kFrontRightSpark, MotorType.kBrushless);
         rightSlave = new CANSparkMax(DriveConstants.kRearRightSpark, MotorType.kBrushless);
 
-        shifter = new Shifter(DriveConstants.kShifterPCMPort, DriveConstants.kMotorWheelLowGearRatio,
-                DriveConstants.kMotorWheelHighGearRatio, DriveConstants.kDistancePerWheelRevolution);
+        shifter = new SmartShifter(DriveConstants.kShifterPCMPort, DriveConstants.kMotorWheelLowGearRatio,
+                DriveConstants.kMotorWheelHighGearRatio, DriveConstants.kDistancePerWheelRevolution,
+                DriveConstants.kMaxSpeedLowGearMetersPerSecond);
 
         leftMaster.restoreFactoryDefaults();
         leftSlave.restoreFactoryDefaults();
@@ -95,7 +96,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Au
     }
 
     public void setShifter(ShifterState state) {
-        shifter.set(state.value);
+        shifter.setState(state);
 
         leftEncoder.setPositionConversionFactor(shifter.outputUnitsPerInputRevolution());
         rightEncoder.setPositionConversionFactor(shifter.outputUnitsPerInputRevolution());
@@ -105,7 +106,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Au
     }
 
     public ShifterState getShifter() {
-        return ShifterState.getState(shifter.get());
+        return shifter.getState();
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
