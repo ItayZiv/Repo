@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.LinearFilter;
 
 public class SmartShifter extends Shifter {
     private final double kMaxVelocityLowGear;
-    private LinearFilter speedFilter = LinearFilter.movingAverage(10);
+    private LinearFilter speedFilter = LinearFilter.movingAverage(15);
 
     public SmartShifter(int port, double gearRatioPower, double gearRatioSpeed, double maxVelocityLowGear) {
         this(port, gearRatioPower, gearRatioSpeed, 0, maxVelocityLowGear);
@@ -19,8 +19,9 @@ public class SmartShifter extends Shifter {
     public void update(double velocity) {
         double filteredVelocity = speedFilter.calculate(Math.abs(velocity));
 
-        if (filteredVelocity >= kMaxVelocityLowGear) {
-
-        }
+        if (filteredVelocity >= kMaxVelocityLowGear)
+            setState(ShifterState.Speed);
+        else
+            setState(ShifterState.Power);
     }
 }
