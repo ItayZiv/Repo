@@ -74,8 +74,6 @@ public class RobotContainer
      */
     private void configureButtonBindings()
     {
-        new JoystickButton(leftJoystick, OIConstants.kShifterJoystickButton).whenPressed(
-                () -> driveTrain.setShifter(driveTrain.getShifter().swap()), driveTrain);
         new JoystickButton(rightJoystick, OIConstants.kAlignJoystickButton).whileHeld(new AlignTargetCommand(driveTrain, vision));
         new JoystickButton(rightJoystick, OIConstants.kStraightDriveButton).whileHeld(new ArcadeDriveCommand(driveTrain,
                 () -> rightJoystick.getY() * -1, () -> 0));

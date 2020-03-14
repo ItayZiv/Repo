@@ -1,5 +1,6 @@
 package frc.megiddolions.lib.hardware.motors;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.LinearFilter;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 
@@ -20,13 +21,15 @@ public class SmartShifter extends Shifter {
     }
 
     public void update(DifferentialDriveWheelSpeeds velocity) {
-        double filteredVelocity = velocityFilter.calculate(Math.min(Math.abs(velocity.leftMetersPerSecond),
-                Math.abs(velocity.rightMetersPerSecond)));
-        double turningDifference = Math.abs(velocity.leftMetersPerSecond - velocity.rightMetersPerSecond);
+        if (!DriverStation.getInstance().isAutonomous() && DriverStation.getInstance().isEnabled()) {
+            double filteredVelocity = velocityFilter.calculate(Math.min(Math.abs(velocity.leftMetersPerSecond),
+                    Math.abs(velocity.rightMetersPerSecond)));
+            double turningDifference = Math.abs(velocity.leftMetersPerSecond - velocity.rightMetersPerSecond);
 
-        if (filteredVelocity >= kMaxVelocityLowGear && kTurningThreshold <= turningDifference)
-            setState(ShifterState.High);
-        else
-            setState(ShifterState.Low);
+            if (filteredVelocity >= kMaxVelocityLowGear && kTurningThreshold <= turningDifference)
+                setState(ShifterState.High);
+            else
+                setState(ShifterState.Low);
+        }
     }
 }
