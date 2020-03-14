@@ -61,6 +61,8 @@ public final class Constants
 
         public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidthMeters);
 
+        public static final double kMaxSpeedLowGearMetersPerSecond = 6;
+
         public static final double ksVolts = 0.223;
         public static final double kvVoltsSecondsPerMeter = 1.58;
         public static final double kaVoltsSecondsSquaredPerMeter = 0.27;
