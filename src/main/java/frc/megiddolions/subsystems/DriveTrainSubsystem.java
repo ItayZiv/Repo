@@ -96,6 +96,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Au
         drive.tankDriveVolts(leftVolts, rightVolts);
     }
 
+    @Deprecated
     public void setShifter(ShifterState state) {
         shifter.setState(state);
 
