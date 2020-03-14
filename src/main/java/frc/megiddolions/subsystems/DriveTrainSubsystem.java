@@ -47,7 +47,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Au
 
         shifter = new SmartShifter(DriveConstants.kShifterPCMPort, DriveConstants.kMotorWheelLowGearRatio,
                 DriveConstants.kMotorWheelHighGearRatio, DriveConstants.kDistancePerWheelRevolution,
-                DriveConstants.kMaxSpeedLowGearMetersPerSecond);
+                DriveConstants.kMaxSpeedLowGearMetersPerSecond, DriveConstants.kTurningDifferenceMetersPerSecond);
 
         leftMaster.restoreFactoryDefaults();
         leftSlave.restoreFactoryDefaults();
@@ -81,6 +81,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements DriveTrain, Au
     @Override
     public void periodic() {
         odometry.update(getHeading(), leftEncoder.getPosition(), rightEncoder.getPosition());
+        shifter.update(getWheelSpeeds());
     }
 
     public void tankDrive(double leftPower, double rightPower) {
