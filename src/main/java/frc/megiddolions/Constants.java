@@ -184,15 +184,13 @@ public final class Constants
 
         public static final DifferentialDriveVoltageConstraint autoVoltageConstraints = new DifferentialDriveVoltageConstraint(
                 DriveConstants.kFeedForwardConstants.toSimpleMotorFeedForward(), DriveConstants.kDriveKinematics, 10);
-        public static final DifferentialDriveKinematicsConstraint autoKinematicsConstraints = new DifferentialDriveKinematicsConstraint(
-                DriveConstants.kDriveKinematics, kMaxSpeedMetersPerSecond);
         public static final CentripetalAccelerationConstraint autoCentripetalAccelConstraints = new CentripetalAccelerationConstraint(
                 kMaxCentripetalAccelerationMetersPerSecondSquared);
 
         public static final TrajectoryConfig config =
                 new TrajectoryConfig(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared)
                         .setKinematics(DriveConstants.kDriveKinematics)
-                        .addConstraints(List.of(autoVoltageConstraints, autoKinematicsConstraints));
+                        .addConstraints(List.of(autoVoltageConstraints));
 
         public static Transform2d kDefaultTrajectoryTransform = new Transform2d(new Pose2d(), new Pose2d(-3, 0, new Rotation2d()));
         public static Trajectory kDefaultTrajectory = TrajectoryGenerator.generateTrajectory(Constants.AutoConstants.kStartingPose,
