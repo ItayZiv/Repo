@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.megiddolions.lib.control.trajectories.Path;
@@ -176,16 +178,21 @@ public final class Constants
 
     public static final class AutoConstants {
         public static final Pose2d kStartingPose = new Pose2d();
-        public static final double kMaxSpeedMetersPerSecond = 10;
+        public static final double kMaxSpeedMetersPerSecond = 8;
         public static final double kMaxAccelerationMetersPerSecondSquared = 8;
+        public static final double kMaxCentripetalAccelerationMetersPerSecondSquared = kMaxAccelerationMetersPerSecondSquared;
 
         public static final DifferentialDriveVoltageConstraint autoVoltageConstraints = new DifferentialDriveVoltageConstraint(
                 DriveConstants.kFeedForwardConstants.toSimpleMotorFeedForward(), DriveConstants.kDriveKinematics, 10);
+        public static final DifferentialDriveKinematicsConstraint autoKinematicsConstraints = new DifferentialDriveKinematicsConstraint(
+                DriveConstants.kDriveKinematics, kMaxSpeedMetersPerSecond);
+        public static final CentripetalAccelerationConstraint autoCentripetalAccelConstraints = new CentripetalAccelerationConstraint(
+                kMaxCentripetalAccelerationMetersPerSecondSquared);
 
         public static final TrajectoryConfig config =
                 new TrajectoryConfig(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared)
                         .setKinematics(DriveConstants.kDriveKinematics)
-                        .addConstraint(autoVoltageConstraints);
+                        .addConstraints(List.of(autoVoltageConstraints, autoKinematicsConstraints));
 
         public static Transform2d kDefaultTrajectoryTransform = new Transform2d(new Pose2d(), new Pose2d(-3, 0, new Rotation2d()));
         public static Trajectory kDefaultTrajectory = TrajectoryGenerator.generateTrajectory(Constants.AutoConstants.kStartingPose,
