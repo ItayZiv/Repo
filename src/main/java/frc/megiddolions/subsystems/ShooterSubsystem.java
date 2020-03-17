@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.megiddolions.Constants.ShooterConstants;
@@ -44,7 +45,8 @@ public class ShooterSubsystem extends SubsystemBase implements Stoppable {
 
     public void spin(int revolutionPerMinute) {
         shooterMaster.set(ControlMode.Velocity, revolutionPerMinute, DemandType.ArbitraryFeedForward,
-                shooterFeedForward.calculate(util.UnitsPerMinuteToUnitsPerSecond(revolutionPerMinute)));
+                shooterFeedForward.calculate(util.UnitsPerMinuteToUnitsPerSecond(revolutionPerMinute) /
+                        RobotController.getBatteryVoltage()));
     }
 
     public void spin(double power) {

@@ -56,8 +56,8 @@ public final class Constants
 
         private static final double kWheelDiameterInches = 6;
         public static final double kWheelDiameterMeters = Units.inchesToMeters(kWheelDiameterInches);
-        public static final double kMotorWheelLowGearRatio = 5.952380952;
-        public static final double kMotorWheelHighGearRatio = 2.619047619;
+        public static final double kMotorWheelLowGearRatio = 5.13;
+        public static final double kMotorWheelHighGearRatio = 11.67;
 
         public static final double kDistancePerWheelRevolution = kWheelDiameterMeters * Math.PI;
 
