@@ -11,9 +11,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 public class FileTransfer {
-    private static final String kTableName = "logger";
+    private static final UUID kUUID = UUID.fromString("e378f733-abc5-4df7-8b21-da1cde4ad436");
 
     private FileTransfer m_instance = null;
 
@@ -32,10 +33,6 @@ public class FileTransfer {
 
     private FileTransfer() {
         makeReader();
-        table = NetworkTableInstance.getDefault().getTable(kTableName);
-        sentCount = table.getEntry("sentCount");
-        receivedCount = table.getEntry("receivedCount");
-        (done = table.getEntry("done")).setBoolean(false);
     }
 
     private void makeReader() {
@@ -45,6 +42,23 @@ public class FileTransfer {
         } catch (FileNotFoundException e) {
             DriverStation.reportError("Error opening CSV", e.getStackTrace());
         }
+    }
+
+    public boolean initialize() {
+        if (!running) {
+            var UUIDTable = NetworkTableInstance.getDefault().getTable(kUUID.toString());
+            if (UUIDTable.getEntry("clientReady").getBoolean(false)) {
+                table = NetworkTableInstance.getDefault().getTable(UUIDTable.getEntry("table")
+                        .getString(""));
+                sentCount = table.getEntry("sentCount");
+                receivedCount = table.getEntry("receivedCount");
+                (done = table.getEntry("done")).setBoolean(false);
+                UUIDTable.getEntry("serverReady").setBoolean(true);
+            }
+            else
+                return false;
+        }
+        return true;
     }
 
     public void start() {
