@@ -80,7 +80,7 @@ public class FileTransfer {
         running = true;
     }
 
-    public void update() {
+    public boolean update() {
         if (running &&
                 receivedCount.getNumber(0).longValue() > sentCount.getNumber(0).longValue()) {
             String row;
@@ -97,11 +97,13 @@ public class FileTransfer {
                 }
                 else {
                     finish();
+                    return true;
                 }
             } catch (IOException e) {
                 DriverStation.reportError("Error reading data from CSV", e.getStackTrace());
             }
         }
+        return false;
     }
 
     public void finish() {
