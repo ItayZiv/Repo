@@ -64,6 +64,7 @@ public class FileLogger {
             dataEntries.forEach((key, dataSupplier) -> data.add(dataSupplier.getData().toString()));
             try {
                 csvWriter.append(String.join(",", data));
+                csvWriter.append("\n");
                 csvWriter.flush();
             } catch (IOException e) {
                 DriverStation.reportError("Error writing data to CSV", e.getStackTrace());
