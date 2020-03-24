@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.megiddolions.lib.annotations.Tested;
 
-import java.util.AbstractMap;
 import java.util.Map;
 
 @Tested
@@ -15,11 +14,11 @@ public class ControlPanel {
     private static final Color kRedTarget = new Color(0.561, 0.232, 0.114);
     private static final Color kYellowTarget = new Color(0.361, 0.524, 0.113);
 
-    public static final Map<ControlPanelColor, ControlPanelColor> kColorOffsetMap = Map.ofEntries(
-            new AbstractMap.SimpleEntry<>(ControlPanelColor.Yellow, ControlPanelColor.Green),
-            new AbstractMap.SimpleEntry<>(ControlPanelColor.Red, ControlPanelColor.Blue),
-            new AbstractMap.SimpleEntry<>(ControlPanelColor.Green, ControlPanelColor.Yellow),
-            new AbstractMap.SimpleEntry<>(ControlPanelColor.Blue, ControlPanelColor.Red));
+    public static final Map<ControlPanelColor, ControlPanelColor> kColorOffsetMap = Map.of(
+            ControlPanelColor.Yellow, ControlPanelColor.Green,
+            ControlPanelColor.Red, ControlPanelColor.Blue,
+            ControlPanelColor.Green, ControlPanelColor.Yellow,
+            ControlPanelColor.Blue, ControlPanelColor.Red);
 
     public enum ControlPanelColor {
         Blue(kBlueTarget),
