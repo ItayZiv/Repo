@@ -1,6 +1,5 @@
 package frc.megiddolions.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.megiddolions.lib.hardware.motors.Stoppable;
 

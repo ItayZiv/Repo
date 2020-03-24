@@ -1,9 +1,7 @@
 package frc.megiddolions.auto;
 
-import frc.megiddolions.lib.ObjectFactory;
 import frc.megiddolions.lib.hardware.motors.Stoppable;
 
-import java.util.Collections;
 import java.util.List;
 
 public class StopAction extends AutoAction {

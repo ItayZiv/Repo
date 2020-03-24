@@ -3,14 +3,11 @@ package frc.megiddolions.lib.dashboard;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.megiddolions.Constants.DashboardConstants;
 import frc.megiddolions.lib.InfiniteRecharge.ControlPanel;
-import frc.megiddolions.lib.dashboard.test.DashboardUpdatable;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.function.Supplier;
 
 public class Dashboard {

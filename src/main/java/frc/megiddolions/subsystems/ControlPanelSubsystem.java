@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -13,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.megiddolions.Constants.ControlPanelConstants;
 import frc.megiddolions.lib.InfiniteRecharge.ControlPanel;
 import frc.megiddolions.lib.dashboard.Dashboard;
-import frc.megiddolions.lib.dashboard.DashboardItem;
 
 public class ControlPanelSubsystem extends SubsystemBase {
     private final WPI_TalonSRX spinMotor;

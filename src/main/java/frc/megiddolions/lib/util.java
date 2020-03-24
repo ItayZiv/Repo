@@ -3,7 +3,6 @@ package frc.megiddolions.lib;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -21,7 +20,6 @@ import frc.megiddolions.lib.lambdas.Suppliers;
 import frc.megiddolions.lib.hardware.power.CurrentSensor;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;

@@ -3,7 +3,6 @@ package frc.megiddolions.lib.InfiniteRecharge;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.megiddolions.lib.annotations.Tested;
-import frc.megiddolions.lib.annotations.UsedInCompetition;
 
 import java.util.AbstractMap;
 import java.util.Map;
