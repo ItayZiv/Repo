@@ -27,7 +27,8 @@ public class ControlPanel {
             ControlPanelColor.Yellow, ControlPanelColor.Green,
             ControlPanelColor.Red, ControlPanelColor.Blue,
             ControlPanelColor.Green, ControlPanelColor.Yellow,
-            ControlPanelColor.Blue, ControlPanelColor.Red);
+            ControlPanelColor.Blue, ControlPanelColor.Red,
+            ControlPanelColor.Unknown, ControlPanelColor.Unknown);
 
     public static ControlPanelColor getOffsetColorAssignment() {
         return kColorOffsetMap.get(getColorAssignment());

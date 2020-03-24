@@ -19,7 +19,7 @@ public class ControlPanelSubsystem extends SubsystemBase {
 
     private final ColorSensorV3 colorSensor;
 
-    private ColorMatch colorMatch;
+    private ColorMatch colorMatch = new ColorMatch();
     private ColorMatchResult previousColor;
     private ColorMatchResult foundColor;
     private ControlPanel.ControlPanelColor targetColor;
