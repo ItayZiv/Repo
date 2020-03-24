@@ -9,22 +9,11 @@ import java.util.Map;
 @Tested
 public class ControlPanel {
 
-    private static final Color kBlueTarget = new Color(0.143, 0.427, 0.429);
-    private static final Color kGreenTarget = new Color(0.197, 0.561, 0.240);
-    private static final Color kRedTarget = new Color(0.561, 0.232, 0.114);
-    private static final Color kYellowTarget = new Color(0.361, 0.524, 0.113);
-
-    public static final Map<ControlPanelColor, ControlPanelColor> kColorOffsetMap = Map.of(
-            ControlPanelColor.Yellow, ControlPanelColor.Green,
-            ControlPanelColor.Red, ControlPanelColor.Blue,
-            ControlPanelColor.Green, ControlPanelColor.Yellow,
-            ControlPanelColor.Blue, ControlPanelColor.Red);
-
     public enum ControlPanelColor {
-        Blue(kBlueTarget),
-        Green(kGreenTarget),
-        Red(kRedTarget),
-        Yellow(kYellowTarget),
+        Blue(new Color(0.143, 0.427, 0.429)),
+        Green(new Color(0.197, 0.561, 0.240)),
+        Red(new Color(0.561, 0.232, 0.114)),
+        Yellow(new Color(0.361, 0.524, 0.113)),
         Unknown(new Color(0, 0, 0));
 
         public final Color colorVal;
@@ -33,6 +22,12 @@ public class ControlPanel {
             colorVal = color;
         }
     }
+    
+    public static final Map<ControlPanelColor, ControlPanelColor> kColorOffsetMap = Map.of(
+            ControlPanelColor.Yellow, ControlPanelColor.Green,
+            ControlPanelColor.Red, ControlPanelColor.Blue,
+            ControlPanelColor.Green, ControlPanelColor.Yellow,
+            ControlPanelColor.Blue, ControlPanelColor.Red);
 
     public static ControlPanelColor getOffsetColorAssignment() {
         return kColorOffsetMap.get(getColorAssignment());
