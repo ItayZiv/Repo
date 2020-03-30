@@ -87,7 +87,7 @@ public class MecanumDrive implements DriveTrain {
      * @param rightPower the power to give the right side along the X axis [-1.0..1.0]. Forward is positive.
      */
     public void tankDrive(double leftPower, double rightPower) {
-        consumer.drive(leftPower,leftPower, rightPower, rightPower);
+        consumer.drive(leftPower, leftPower, rightPower, rightPower);
     }
 
     /**
@@ -100,7 +100,7 @@ public class MecanumDrive implements DriveTrain {
     public void tankDriveVolts(double leftVolts, double rightVolts) {
         double leftPower = leftVolts / RobotController.getBatteryVoltage();
         double rightPower = rightVolts / RobotController.getBatteryVoltage();
-        consumer.drive(leftPower, leftPower, rightPower, rightPower);
+        tankDrive(leftPower, rightPower);
     }
 
     /**
