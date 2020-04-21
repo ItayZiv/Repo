@@ -27,6 +27,8 @@ public class FileTransfer {
     public boolean running = false;
     private BufferedReader csvReader;
 
+    NetworkTableInstance nt_instance = NetworkTableInstance.getDefault();
+
     private NetworkTable UUIDTable;
     private NetworkTableEntry serverReady;
 
@@ -37,7 +39,7 @@ public class FileTransfer {
 
     private FileTransfer() {
         makeReader();
-        UUIDTable = NetworkTableInstance.getDefault().getTable(kUUID.toString());
+        UUIDTable = nt_instance.getTable(kUUID.toString());
         serverReady = UUIDTable.getEntry("serverReady");
     }
 
@@ -53,8 +55,7 @@ public class FileTransfer {
     public boolean initialize() {
         if (!serverReady.getBoolean(false)) {
             if (UUIDTable.getEntry("clientReady").getBoolean(false)) {
-                table = NetworkTableInstance.getDefault().getTable(UUIDTable.getEntry("table")
-                        .getString(""));
+                table = nt_instance.getTable(UUIDTable.getEntry("table").getString(""));
                 sentCount = table.getEntry("sentCount");
                 receivedCount = table.getEntry("receivedCount");
                 (done = table.getEntry("done")).setBoolean(false);
@@ -94,6 +95,8 @@ public class FileTransfer {
                     table.getEntry("values").setNumberArray((Number[]) data.toArray());
 
                     sentCount.setNumber(sentCount.getNumber(0).longValue() + 1);
+
+                    nt_instance.flush();
                 }
                 else {
                     finish();
