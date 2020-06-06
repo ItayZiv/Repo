@@ -20,11 +20,11 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.util.Units;
-import frc.megiddolions.lib.control.trajectories.Path;
-import frc.megiddolions.lib.util;
 import frc.megiddolions.lib.control.FeedForward;
 import frc.megiddolions.lib.control.PID;
+import frc.megiddolions.lib.control.trajectories.Path;
 import frc.megiddolions.lib.lambdas.UnitConverter;
+import frc.megiddolions.lib.util;
 
 import java.util.Collections;
 import java.util.List;

@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.megiddolions.lib.control.FeedForward;
 import frc.megiddolions.lib.control.PID;
 import frc.megiddolions.lib.control.drivetrain.RamseteGen_DT;
-import frc.megiddolions.lib.lambdas.Suppliers;
 import frc.megiddolions.lib.hardware.power.CurrentSensor;
+import frc.megiddolions.lib.lambdas.Suppliers;
 
 import java.io.IOException;
 import java.util.List;
